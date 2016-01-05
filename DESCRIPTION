@@ -1,0 +1,19 @@
+Package: smapr
+Title: smapr
+Version: 0.0.0.9000
+Authors@R: person("Homer", "Strong", email = "hstrong@uci.edu", role = c("aut", "cre"))
+Description: Utilities for downloading, processing, and viewing SMAP soil
+    moisture data.
+Depends:
+    R (>= 3.1.3)
+Imports:
+    rhdf5,
+    reshape2
+Suggests:
+    ggmap,
+    ggplot2,
+    shiny,
+    testthat
+License: MIT
+LazyData: true
+RoxygenNote: 5.0.1.9000
