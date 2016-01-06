@@ -1,5 +1,9 @@
 # smapr
-R package for working with SMAP soil moisture data.
+R package for working with SMAP soil moisture data. Install using devtools:
+
+```
+devtools::install_github("strongh/smapr")
+```
 
 # Examples
 

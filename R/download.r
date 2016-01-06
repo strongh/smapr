@@ -94,14 +94,20 @@ read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproj
   colnames(mydata) <- lats[1,]
 
   smap <- reshape2::melt(mydata, na.rm=TRUE)
+  names(smap) <- c("lon", "lat", "soil.moisture")
   ## taken from http://nsidc.org/data/atlas/epsg_3410.html
   ease_proj <- "+proj=cea\n+lat_0=0\n+lon_0=0\n+lat_ts=30\n+a=6371228.0\n+units=m"
+
+  if (!is.null(bounding.box)){
+    smap <- subset(
+      smap,
+      lat < bounding.box$latMax & lat > bounding.box$latMin & lon < bounding.box$lonMax & lon > bounding.box$lonMin)
+  }
 
   if (reproject){
     smap[, 1:2] <- proj4::project(smap[, 1:2], ease_proj)
   }
 
-  names(smap) <- c("lon", "lat", "soil.moisture")
 
 #  ca.smap <- subset(smap, lat < 45 & lat > 30  & lon < -115 & lon > -125)
   smap
