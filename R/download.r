@@ -39,7 +39,7 @@ smap.url <- function(date, dataset.id = "SM_AP"){
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-download.smap.l3 <- function(date, data.dir = "/home/homer/data/smap_ap", dataset.id = "SM_AP"){
+download.smap.l3 <- function(date, data.dir = "~/data/smap_ap", dataset.id = "SM_AP"){
 
   filename <- smap.filename(date, dataset.id)
   filepath <- paste0(data.dir, "/", filename)
@@ -56,11 +56,12 @@ download.smap.l3 <- function(date, data.dir = "/home/homer/data/smap_ap", datase
 #'
 #' Returns a dataframe withe SMAP data. Will download if necessary.
 #' @param date
+#' @param reproject
 #' @keywords download
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-read.smap.l3 <- function(date, data.dir = "/home/homer/data/smap_ap", bounding.box = central.india.bbox){
+read.smap.l3 <- function(date, data.dir = "~/data/smap_ap", bounding.box = NULL, reproject = TRUE){
 
   download.smap.l3(date, data.dir = data.dir)
 
@@ -88,10 +89,16 @@ read.smap.l3 <- function(date, data.dir = "/home/homer/data/smap_ap", bounding.b
   colnames(mydata) <- lats[1,]
 
   smap <- reshape2::melt(mydata, na.rm=TRUE)
+  ## taken from http://nsidc.org/data/atlas/epsg_3410.html
+  ease_proj <- "+proj=cea\n+lat_0=0\n+lon_0=0\n+lat_ts=30\n+a=6371228.0\n+units=m"
+
+  if (reproject){
+    smap[, 1:2] <- proj4::project(smap[, 1:2], easy_proj)
+  }
 
   names(smap) <- c("lon", "lat", "soil.moisture")
 
-  ca.smap <- subset(smap, lat < 45 & lat > 30  & lon < -115 & lon > -125)
+#  ca.smap <- subset(smap, lat < 45 & lat > 30  & lon < -115 & lon > -125)
   smap
 }
 
