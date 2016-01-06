@@ -4,8 +4,7 @@
 \alias{download.smap.l3}
 \title{Download SMAP data for date}
 \usage{
-download.smap.l3(date, data.dir = "/home/homer/data/smap_ap",
-  dataset.id = "SM_AP")
+download.smap.l3(date, data.dir = "smap_ap", dataset.id = "SM_AP")
 }
 \description{
 Checks whether download already exsts in data directory. If local copy does not exist, then performs FTP download.

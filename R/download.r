@@ -1,5 +1,6 @@
 ## TODO: figure out how these version strings are constructed
-DEFAULT_VERSION <- "R12170_002"
+DEFAULT_VERSION    <- "R12170_002"
+DEFAULT_DATA_DIR   <- "smap_ap"
 
 #' SMAP filename
 #'
@@ -39,17 +40,21 @@ smap.url <- function(date, dataset.id = "SM_AP"){
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-download.smap.l3 <- function(date, data.dir = "~/data/smap_ap", dataset.id = "SM_AP"){
+download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP"){
 
   filename <- smap.filename(date, dataset.id)
   filepath <- paste0(data.dir, "/", filename)
   url <- smap.url(date, dataset.id)
 
-  downloaded <- 0==system(paste0("ls ", filepath))
+  downloaded <- 0==system(paste0("ls ", filepath), ignore.stdout = TRUE)
   if (!downloaded){
-    download.file(url, filepath)
+    res <- download.file(url, filepath)
+    if (res > 0){
+      # clean up any leftover files
+      system(paste0("rm ", filepath), ignore.stdout = TRUE)
+      stop("File not found. Check that data is available for that date.")
+    }
   }
-
 }
 
 #' Read SMAP data for date
@@ -61,7 +66,7 @@ download.smap.l3 <- function(date, data.dir = "~/data/smap_ap", dataset.id = "SM
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-read.smap.l3 <- function(date, data.dir = "~/data/smap_ap", bounding.box = NULL, reproject = TRUE){
+read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproject = TRUE){
 
   download.smap.l3(date, data.dir = data.dir)
 
@@ -93,7 +98,7 @@ read.smap.l3 <- function(date, data.dir = "~/data/smap_ap", bounding.box = NULL,
   ease_proj <- "+proj=cea\n+lat_0=0\n+lon_0=0\n+lat_ts=30\n+a=6371228.0\n+units=m"
 
   if (reproject){
-    smap[, 1:2] <- proj4::project(smap[, 1:2], easy_proj)
+    smap[, 1:2] <- proj4::project(smap[, 1:2], ease_proj)
   }
 
   names(smap) <- c("lon", "lat", "soil.moisture")

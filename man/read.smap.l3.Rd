@@ -4,8 +4,8 @@
 \alias{read.smap.l3}
 \title{Read SMAP data for date}
 \usage{
-read.smap.l3(date, data.dir = "/home/homer/data/smap_ap",
-  bounding.box = central.india.bbox)
+read.smap.l3(date, data.dir = "smap_ap", bounding.box = NULL,
+  reproject = TRUE)
 }
 \description{
 Returns a dataframe withe SMAP data. Will download if necessary.
