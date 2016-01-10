@@ -66,11 +66,11 @@ download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP"){
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproject = TRUE){
+read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproject = TRUE, ...){
 
-  download.smap.l3(date, data.dir = data.dir)
+  download.smap.l3(date, data.dir = data.dir, ...)
 
-  fl <- paste0(data.dir, "/", smap.filename(date))
+  fl <- paste0(data.dir, "/", smap.filename(date, ...))
   lats.raw <- rhdf5::h5read(fl, "/Soil_Moisture_Retrieval_Data/latitude")
   longs.raw <- rhdf5::h5read(fl, "/Soil_Moisture_Retrieval_Data/longitude")
   longs.raw[longs.raw< -900] <- NA
