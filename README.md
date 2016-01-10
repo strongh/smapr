@@ -13,6 +13,12 @@ devtools::install_github("strongh/smapr")
 timerange.smap.l3("2015-06-17", "2015-06-18")
 ```
 
+### Download and cache single day of SM_P data
+
+```{r}
+read.smap.l3("2015-06-17", dataset.id = "SM_P")
+```
+
 ### Launch Shiny map viewer of daily data
 
 ```{r}
