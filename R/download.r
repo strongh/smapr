@@ -140,3 +140,19 @@ timerange.smap.l3 <- function(begin, end, bounding.box = NULL, ...){
   }
   do.call('rbind', all.dates)
 }
+
+#' Download global SMAP data beginning at date
+#'
+#' It takes several days for SMAP to cover the entire globe. This function provides global
+#' coverage beginning at given date.
+#'
+#' @param start
+#' @keywords download
+#' @export
+#' @examples
+#' global.smap.l3("2015-09-11")
+global.smap.l3 <- function(begin, bounding.box = NULL, ...){
+  begin.date <- as.Date(begin)
+  end.date <- begin.date + 3
+  timerange.smap.l3(begin, end.date, ...)
+}
