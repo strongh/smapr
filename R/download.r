@@ -10,10 +10,11 @@ DEFAULT_DATA_DIR   <- "smap_ap"
 #' @export
 #' @examples
 #' smap.filename("2015-09-11")
-smap.filename <- function(date, dataset.id = "SM_AP"){
+smap.filename <- function(date, dataset.id = "SM_AP", gzip = TRUE){
   dot.date <- strftime(date, "%Y.%m.%d")
   no.dot.date <- gsub("\\.", "" , dot.date)
-  filename <- paste0("SMAP_L3_", dataset.id, "_", no.dot.date, "_", DEFAULT_VERSION, ".h5")
+  filename <- paste0("SMAP_L3_", dataset.id, "_", no.dot.date, "_", DEFAULT_VERSION, ".h5",
+                     if (gzip) ".gz" else "")
   filename
 }
 
@@ -25,8 +26,8 @@ smap.filename <- function(date, dataset.id = "SM_AP"){
 #' @export
 #' @examples
 #' smap.url("2015-09-11")
-smap.url <- function(date, dataset.id = "SM_AP"){
-  filename <- smap.filename(date, dataset.id)
+smap.url <- function(date, dataset.id = "SM_AP", gzip = TRUE){
+  filename <- smap.filename(date, dataset.id, gzip = gzip)
   dot.date <- strftime(date, "%Y.%m.%d")
   dataset.id.no.underscore <- gsub("_", "", dataset.id)
   paste0("ftp://n5eil01u.ecs.nsidc.org/SAN/SMAP/SPL3", dataset.id.no.underscore, ".002/", dot.date, "/", filename)
@@ -40,11 +41,11 @@ smap.url <- function(date, dataset.id = "SM_AP"){
 #' @export
 #' @examples
 #' download.smap.l3("2015-09-11")
-download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP"){
+download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP", gzip = TRUE){
 
   filename <- smap.filename(date, dataset.id)
   filepath <- paste0(data.dir, "/", filename)
-  url <- smap.url(date, dataset.id)
+  url <- smap.url(date, dataset.id, gzip)
 
   downloaded <- 0==system(paste0("ls ", filepath), ignore.stdout = TRUE)
   if (!downloaded){
@@ -53,6 +54,10 @@ download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP"){
       # clean up any leftover files
       system(paste0("rm ", filepath), ignore.stdout = TRUE)
       stop("File not found. Check that data is available for that date.")
+    }
+
+    if (gzip) {
+      system(paste("gunzip", filepath))
     }
   }
 }
@@ -70,7 +75,7 @@ read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproj
 
   download.smap.l3(date, data.dir = data.dir, ...)
 
-  fl <- paste0(data.dir, "/", smap.filename(date, ...))
+  fl <- paste0(data.dir, "/", smap.filename(date, gzip = FALSE, ...))
   lats.raw <- rhdf5::h5read(fl, "/Soil_Moisture_Retrieval_Data/latitude")
   longs.raw <- rhdf5::h5read(fl, "/Soil_Moisture_Retrieval_Data/longitude")
   longs.raw[longs.raw< -900] <- NA
