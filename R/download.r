@@ -122,15 +122,15 @@ read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproj
 #' @keywords download
 #' @export
 #' @examples
-#' download.smap.l3("2015-09-11")
-timerange.smap.l3 <- function(begin, end, bounding.box = NULL){
+#' timerange.smap.l3("2015-09-11","2015-09-15")
+timerange.smap.l3 <- function(begin, end, bounding.box = NULL, ...){
   begin.date <- as.Date(begin)
   end.date <- as.Date(end)
   dates <- seq(from=begin.date, to=end.date, by="day")
   all.dates <- list()
   for(dt in 1:length(dates)){
     i <- dates[dt]
-    date.df <- read.smap.l3(strptime(i, "%Y-%m-%d"))
+    date.df <- read.smap.l3(strptime(i, "%Y-%m-%d"), ...)
     if(!is.null(bounding.box)){
       date.df <- subset(date.df, lat < bounding.box$latMax & lat > bounding.box$latMin  & lon < bounding.box$lonMax & lon > bounding.box$lonMin)
     }

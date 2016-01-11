@@ -4,13 +4,13 @@
 \alias{timerange.smap.l3}
 \title{Download SMAP for a timerange}
 \usage{
-timerange.smap.l3(begin, end, bounding.box = NULL)
+timerange.smap.l3(begin, end, bounding.box = NULL, ...)
 }
 \description{
 Checks whether download already exsts in data directory. If local copy does not exist, then performs FTP download.
 }
 \examples{
-download.smap.l3("2015-09-11")
+timerange.smap.l3("2015-09-11","2015-09-15")
 }
 \keyword{download}
 
