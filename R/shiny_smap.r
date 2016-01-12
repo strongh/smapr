@@ -6,7 +6,7 @@
 #' @keywords download
 #' @export
 #' @examples
-#' shiny_smap("2015-09-11")
+#' shiny_smap()
 shiny_smap <- function() {
   require(shiny)
   require(ggplot2)
@@ -19,7 +19,7 @@ shiny_smap <- function() {
         sidebarPanel(
           helpText("Looking at SMAP soil moisture"),
 
-          dateInput("date", label = h3("Date input"), value = "2015-06-17")
+          dateInput("date", label = h3("Date input"), value = "2015-06-18")
         ),
 
         mainPanel(
@@ -42,16 +42,16 @@ shiny_smap <- function() {
 
         df$q <- as.numeric(
           cut(df$soil.moisture,
-              breaks=quantile(df$soil.moisture, probs=c(0,0.90,0.95,0.99,1)),
+              breaks=quantile(df$soil.moisture, probs=c(0,0.25,0.50,0.75,1)),
               include.lowest=TRUE))
-        col = c("#0055ff","#00aaff","#00ffaa","#aaff00")[df$q]
+        col = rev(c("#0055ff","#00aaff","#00ffaa","#aaff00"))[df$q]
 
         globejs(lat = df$lat,
                 lon = df$lon,
                 atmosphere = TRUE,
                 pointsize = 1,
                 color = col,
-                val =-5 * log(df$soil.moisture))
+                val =1 / log(df$soil.moisture/(1-df$soil.moisture)))
       })
     }
   )

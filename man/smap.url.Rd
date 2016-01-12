@@ -4,10 +4,10 @@
 \alias{smap.url}
 \title{SMAP URL}
 \usage{
-smap.url(date, dataset.id = "SM_AP")
+smap.url(date, dataset.id = "SM_AP", gzip = TRUE)
 }
 \description{
-Returns the FTP URL from which SMAP can be downloaded.
+Returns the FTP URL from which SMAP can be downloaded. By default fetches gzip compressed file.
 }
 \examples{
 smap.url("2015-09-11")

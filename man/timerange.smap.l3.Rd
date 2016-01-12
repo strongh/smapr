@@ -7,7 +7,8 @@
 timerange.smap.l3(begin, end, bounding.box = NULL, ...)
 }
 \description{
-Checks whether download already exsts in data directory. If local copy does not exist, then performs FTP download.
+Checks whether download already exsts in data directory.
+If local copy does not exist, then performs FTP download.
 }
 \examples{
 timerange.smap.l3("2015-09-11","2015-09-15")

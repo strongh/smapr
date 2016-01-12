@@ -4,7 +4,7 @@ DEFAULT_DATA_DIR   <- "smap_ap"
 
 #' SMAP filename
 #'
-#' Genereates the filenames for HDF5. Incomplete.
+#' Generates the filenames for HDF5. Incomplete.
 #' @param date
 #' @keywords download
 #' @export
@@ -20,7 +20,7 @@ smap.filename <- function(date, dataset.id = "SM_AP", gzip = TRUE){
 
 #' SMAP URL
 #'
-#' Returns the FTP URL from which SMAP can be downloaded.
+#' Returns the FTP URL from which SMAP can be downloaded. By default fetches gzip compressed file.
 #' @param date
 #' @keywords download
 #' @export
@@ -35,7 +35,9 @@ smap.url <- function(date, dataset.id = "SM_AP", gzip = TRUE){
 
 #' Download SMAP data for date
 #'
-#' Checks whether download already exsts in data directory. If local copy does not exist, then performs FTP download.
+#' Checks whether download already exsts in data directory. If local copy does not exist,
+#' then performs FTP download.
+#'
 #' @param date
 #' @keywords download
 #' @export
@@ -43,11 +45,16 @@ smap.url <- function(date, dataset.id = "SM_AP", gzip = TRUE){
 #' download.smap.l3("2015-09-11")
 download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP", gzip = TRUE){
 
-  filename <- smap.filename(date, dataset.id, gzip = FALSE)
+  h5.filename <- smap.filename(date, dataset.id, gzip = FALSE)
+  h5.filepath <- paste0(data.dir, "/", h5.filename)
+
+  ## the difference in these paths is that they are possibly .gz
+  filename <- smap.filename(date, dataset.id, gzip)
   filepath <- paste0(data.dir, "/", filename)
+
   url <- smap.url(date, dataset.id, gzip)
 
-  downloaded <- 0==system(paste0("ls ", filepath), ignore.stdout = TRUE)
+  downloaded <- 0==system(paste0("ls ", h5.filepath), ignore.stdout = TRUE)
   if (!downloaded){
     res <- download.file(url, filepath)
     if (res > 0){
@@ -65,6 +72,7 @@ download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP", g
 #' Read SMAP data for date
 #'
 #' Returns a dataframe withe SMAP data. Will download if necessary.
+#'
 #' @param date
 #' @param reproject
 #' @keywords download
@@ -122,7 +130,9 @@ read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproj
 
 #' Download SMAP for a timerange
 #'
-#' Checks whether download already exsts in data directory. If local copy does not exist, then performs FTP download.
+#' Checks whether download already exsts in data directory.
+#' If local copy does not exist, then performs FTP download.
+#'
 #' @param start
 #' @param end
 #' @keywords download

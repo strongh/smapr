@@ -10,7 +10,7 @@ shiny_smap()
 Starts a Shiny app for viewing SMAP data.
 }
 \examples{
-shiny_smap("2015-09-11")
+shiny_smap()
 }
 \keyword{download}
 

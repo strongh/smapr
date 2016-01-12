@@ -4,10 +4,10 @@
 \alias{smap.filename}
 \title{SMAP filename}
 \usage{
-smap.filename(date, dataset.id = "SM_AP")
+smap.filename(date, dataset.id = "SM_AP", gzip = TRUE)
 }
 \description{
-Genereates the filenames for HDF5. Incomplete.
+Generates the filenames for HDF5. Incomplete.
 }
 \examples{
 smap.filename("2015-09-11")
