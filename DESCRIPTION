@@ -14,6 +14,7 @@ Suggests:
     ggmap,
     ggplot2,
     shiny,
+    rthreejs,
     testthat
 License: MIT
 LazyData: true
