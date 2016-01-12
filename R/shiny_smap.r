@@ -19,7 +19,11 @@ shiny_smap <- function() {
         sidebarPanel(
           helpText("Looking at SMAP soil moisture"),
 
-          dateInput("date", label = h3("Date input"), value = "2015-06-18")
+          dateInput("date", label = h3("Date input"), value = "2015-06-18"),
+          checkboxInput("is.global", "Get global data (over several days)", FALSE),
+          selectInput("dataset.id", "SMAP product:",
+                      c("Radar + Radiometer, 9km, SM_AP" = "SM_AP",
+                        "Radiometer, 36km, SM_P" = "SM_P"), "SM_P")
         ),
 
         mainPanel(
@@ -34,11 +38,20 @@ shiny_smap <- function() {
     ),
     server = function(input, output) {
       output$map <- renderPlot({
-        ggplot(read.smap.l3(input$date, dataset.id = "SM_P"), aes(lon, lat)) + geom_raster(aes(fill=soil.moisture))
+        dataset.id <- input$dataset.id
+        df <- if(input$is.global)
+          global.smap.l3(input$date, dataset.id = dataset.id, reproject = FALSE)
+        else
+          read.smap.l3(input$date, dataset.id = dataset.id, reproject = FALSE)
+        ggplot(df, aes(lon, lat)) + geom_raster(aes(fill=soil.moisture))
       })
 
       output$globe <- renderGlobe({
-        df <- read.smap.l3(input$date, dataset.id = "SM_P", reproject = FALSE)
+        dataset.id <- input$dataset.id
+        df <- if(input$is.global)
+          global.smap.l3(input$date, dataset.id = dataset.id, reproject = FALSE)
+        else
+          read.smap.l3(input$date, dataset.id = dataset.id, reproject = FALSE)
 
         df$q <- as.numeric(
           cut(df$soil.moisture,
