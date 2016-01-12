@@ -43,7 +43,7 @@ smap.url <- function(date, dataset.id = "SM_AP", gzip = TRUE){
 #' download.smap.l3("2015-09-11")
 download.smap.l3 <- function(date, data.dir = "smap_ap", dataset.id = "SM_AP", gzip = TRUE){
 
-  filename <- smap.filename(date, dataset.id)
+  filename <- smap.filename(date, dataset.id, gzip = FALSE)
   filepath <- paste0(data.dir, "/", filename)
   url <- smap.url(date, dataset.id, gzip)
 
@@ -115,6 +115,7 @@ read.smap.l3 <- function(date, data.dir = "smap_ap", bounding.box = NULL, reproj
 
 
 #  ca.smap <- subset(smap, lat < 45 & lat > 30  & lon < -115 & lon > -125)
+  smap$date <- date
   smap
 }
 
